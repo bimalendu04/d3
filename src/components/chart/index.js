@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './index.css';
 import data from '../../data/data.csv';
@@ -11,6 +11,7 @@ import data from '../../data/data.csv';
 
 function Chart() {
     const chartContainer = useRef(null);
+    const [year, setYear] = useState(2013);
 
     useEffect(() => {
         var margin = { top: 20, right: 20, bottom: 30, left: 40 },
@@ -50,18 +51,18 @@ function Chart() {
 
         d3.csv(data, function (error, data) {
             data.forEach(function (d) {
-                d['2013_Current_Competitiveness'] = +d['2013_Current_Competitiveness'];
-                d['2013_Future_Competitiveness'] = +d['2013_Future_Competitiveness'];
+                d[`${year}_Current_Competitiveness`] = +d[`${year}_Current_Competitiveness`];
+                d[`${year}_Future_Competitiveness`] = +d[`${year}_Future_Competitiveness`];
                 d.petal_length = +d.petal_length;
                 d.petal_width = +d.petal_width;
             });
 
             x.domain(d3.extent(data, function (d) {
-                return d['2013_Current_Competitiveness'];
+                return d[`${year}_Current_Competitiveness`];
             })).nice();
 
             y.domain(d3.extent(data, function (d) {
-                return d['2013_Future_Competitiveness'];
+                return d[`${year}_Future_Competitiveness`];
             })).nice();
 
             r.domain(d3.extent(data, function (d) {
@@ -98,10 +99,10 @@ function Chart() {
                 .data(data)
                 .enter().append("path")
                 .attr("class", "symbol")
-                .attr("d", function (d, i) { return symbol.type(symbols(d['2013_Category']))(); })
-                .style("fill", function (d) { return color(d['2013_Category']); })
+                .attr("d", function (d, i) { return symbol.type(symbols(d[`${year}_Category`]))(); })
+                .style("fill", function (d) { return color(d[`${year}_Category`]); })
                 .attr("transform", function (d) {
-                    return "translate(" + x(d['2013_Current_Competitiveness']) + "," + y(d['2013_Future_Competitiveness']) + ")";
+                    return "translate(" + x(d[`${year}_Current_Competitiveness`]) + "," + y(d[`${year}_Future_Competitiveness`]) + ")";
                 });
 
             var clicked = ""
@@ -124,7 +125,7 @@ function Chart() {
                     if (clicked !== d) {
                         d3.selectAll(".symbol")
                             .filter(function (e) {
-                                return e['2013_Category'] !== d;
+                                return e[`${year}_Category`] !== d;
                             })
                             .style("opacity", 0.1)
                         clicked = d
@@ -143,10 +144,13 @@ function Chart() {
 
         });
 
-    }, [])
+    }, [year])
 
     return (
-        <div ref={chartContainer} id="chart_Container"></div>
+        <div>
+            <span className={`year ${year == 2013 ? 'selected' : ''}`} onClick={() => setYear(2013)}>2013</span> | <span className={`year ${year == 2016 ? 'selected' : ''}`} onClick={() => setYear(2016)}>2016</span>
+            <div ref={chartContainer} id="chart_Container"></div>
+        </div>
     )
 }
 

@@ -18,3 +18,13 @@ body {
       height: 28px;
       pointer-events: none;
   }
+
+  .year {
+    cursor: pointer;
+    font-size: 16px;
+    color: #41C4D9;
+  }
+
+  .selected {
+    font-size: 18px;
+  }
