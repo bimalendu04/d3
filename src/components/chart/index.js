@@ -12,6 +12,7 @@ import data from '../../data/data.csv';
 function Chart() {
     const chartContainer = useRef(null);
     const [year, setYear] = useState(2013);
+    let extraFilter = ['Auto', 'Consumer', 'Industry', 'Hitech'];
 
     useEffect(() => {
         var margin = { top: 20, right: 20, bottom: 30, left: 40 },
@@ -35,7 +36,7 @@ function Chart() {
 
         var color = d3.scaleOrdinal(d3.schemeCategory20);
         var symbols = d3.scaleOrdinal(d3.symbols);
-        
+
         if (chartContainer.current.children.length !== 0) {
             chartContainer.current.innerHTML = '';
         }
@@ -151,7 +152,17 @@ function Chart() {
 
     return (
         <div>
-            <span className={`year ${year == 2013 ? 'selected' : ''}`} onClick={() => setYear(2013)}>2013</span> | <span className={`year ${year == 2016 ? 'selected' : ''}`} onClick={() => setYear(2016)}>2016</span>
+            <div
+            ><span className={`year ${year == 2013 ? 'selected' : ''}`} onClick={() => setYear(2013)}>2013</span>
+                <span className={`year ${year == 2016 ? 'selected' : ''}`} onClick={() => setYear(2016)}>2016</span>
+            </div>
+            <div className={`extraFilter`}>
+                {
+                    extraFilter.map((filterName, index) => {
+                        return <span className={`year ${year == filterName ? 'selected' : ''}`} onClick={() => setYear(filterName)} key={filterName}>{filterName}</span>
+                    })
+                }
+            </div>
             <div ref={chartContainer} id="chart_Container"></div>
         </div>
     )
