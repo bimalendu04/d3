@@ -35,10 +35,13 @@ function Chart() {
 
         var color = d3.scaleOrdinal(d3.schemeCategory20);
         var symbols = d3.scaleOrdinal(d3.symbols);
+        
+        if (chartContainer.current.children.length !== 0) {
+            chartContainer.current.innerHTML = '';
+        }
 
         // creates a generator for symbols
         var symbol = d3.symbol().size(100);
-
         var svg = d3.select(chartContainer.current).append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)
