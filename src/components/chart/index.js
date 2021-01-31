@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 import './index.css';
-import data from '../../data/iris.csv';
+import data from '../../data/data.csv';
 
 // export default class Chart extends Component {
 //     render() {
@@ -50,18 +50,18 @@ function Chart() {
 
         d3.csv(data, function (error, data) {
             data.forEach(function (d) {
-                d.sepal_length = +d.sepal_length;
-                d.sepal_width = +d.sepal_width;
+                d['2013_Current_Competitiveness'] = +d['2013_Current_Competitiveness'];
+                d['2013_Future_Competitiveness'] = +d['2013_Future_Competitiveness'];
                 d.petal_length = +d.petal_length;
                 d.petal_width = +d.petal_width;
             });
 
             x.domain(d3.extent(data, function (d) {
-                return d.sepal_length;
+                return d['2013_Current_Competitiveness'];
             })).nice();
 
             y.domain(d3.extent(data, function (d) {
-                return d.sepal_width;
+                return d['2013_Future_Competitiveness'];
             })).nice();
 
             r.domain(d3.extent(data, function (d) {
@@ -98,10 +98,10 @@ function Chart() {
                 .data(data)
                 .enter().append("path")
                 .attr("class", "symbol")
-                .attr("d", function (d, i) { return symbol.type(symbols(d.species))(); })
-                .style("fill", function (d) { return color(d.species); })
+                .attr("d", function (d, i) { return symbol.type(symbols(d['2013_Category']))(); })
+                .style("fill", function (d) { return color(d['2013_Category']); })
                 .attr("transform", function (d) {
-                    return "translate(" + x(d.sepal_length) + "," + y(d.sepal_width) + ")";
+                    return "translate(" + x(d['2013_Current_Competitiveness']) + "," + y(d['2013_Future_Competitiveness']) + ")";
                 });
 
             var clicked = ""
@@ -124,7 +124,7 @@ function Chart() {
                     if (clicked !== d) {
                         d3.selectAll(".symbol")
                             .filter(function (e) {
-                                return e.species !== d;
+                                return e['2013_Category'] !== d;
                             })
                             .style("opacity", 0.1)
                         clicked = d
